@@ -10,8 +10,8 @@ from models import storage
 
 @app_views.route('/status', methods=['GET'])
 def api_status():
-    '''
+    """
     Returns a JSON response for RESTful API health
-    '''
+    """
     response = {'status': 'OK'}
     return jsonify(response)
