@@ -30,29 +30,6 @@ class FileStorage:
                     result_all[key] = value
             return result_all
 
-    def get(self, cls, id):
-        """
-            Returns the object based on the class and its ID,
-            or None if not found
-            Args:
-                cls: class
-                id: string representing the object ID
-        """
-        key = '{}.{}'.format(cls.__name__, id)
-        return self.__objects.get(key, None)
-
-    def count(self, cls=None):
-        """
-            Returns the number of objects in storage matching the given class.
-            If no class is passed, returns the count of all objects in storage.
-            Args:
-                cls: class (optional)
-        """
-        if cls is None:
-            return len(self.__objects)
-        else:
-            return len(self.all(cls))
-
     def new(self, obj):
         """
             Sets the obj in __objects with key:
