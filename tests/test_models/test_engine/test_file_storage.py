@@ -117,3 +117,29 @@ class test_fileStorage(unittest.TestCase):
         from models.engine.file_storage import FileStorage
         print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_get(self):
+        """ Add an object to storage File """
+        obj = BaseModel()
+        self.storage.new(obj)
+        self.storage.save()
+
+        # Test that the correct object is returned
+        self.assertEqual(self.storage.get(BaseModel, obj.id), obj)
+
+        # Test that None is returned if No object found
+        self.assertEqual(self.storage.get(
+            BaseModel, "No object found with this ID"))
+
+    def test_count(self):
+        """ Add some objects to storage """
+        for obj in range(5):
+            obj = BaseModel()
+            self.storage.new(obj)
+        self.storage.save()
+
+        # Test that the correct count is returned
+        self.assertEqual(self.storage.count(BaseModel), 5)
+
+        # Test that the count of all object is returned if No class passed
+        self.assertEqual(self.storage.count(), 5)
