@@ -77,7 +77,7 @@ def create_state():
     # Return the newly created State object in JSON format with 201 status code
     return jsonify(state.to_dict()), 201
 
-# Route for updating an existing State object by ID
+# Route for updating a specific State object by ID
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     """
@@ -85,43 +85,21 @@ def update_state(state_id):
     """
     # Get the State object with the given ID from the storage
     state = storage.get(State, state_id)
-    if state:
-        if not request.get_json():
-            # Return 400 error if the request data is not in JSON format
-            abort(400, 'Not a JSON')
-
-        # Get the JSON data from the request
-        data = request.get_json()
-        ignore_keys = ['id', 'created_at', 'updated_at']
-        # Update the attributes of the State object with the JSON data
-        for key, value in data.items():
-            if key not in ignore_keys:
-                setattr(state, key, value)
-
-        # Save the updated State object to the storage
-        state.save()
-        # Return the updated State object in JSON format with 200 status code
-        return jsonify(state.to_dict()), 200
-    else:
+    if not state:
         # Return 404 error if the State object is not found
         abort(404)
 
-# Error Handlers:
+    if not request.get_json():
+        # Return 400 error if the request data is not in JSON format
+        abort(400, 'Not a JSON')
 
-@app_views.errorhandler(404)
-def not_found(error):
-    """
-    Raises a 404 error.
-    """
-    # Return a JSON response for 404 error
-    response = {'error': 'Not found'}
-    return jsonify(response), 404
-
-@app_views.errorhandler(400)
-def bad_request(error):
-    """
-    Returns a Bad Request message for illegal requests to the API.
-    """
-    # Return a JSON response for 400 error
-    response = {'error': 'Bad Request'}
-    return jsonify(response), 400
+    # Get the JSON data from the request
+    kwargs = request.get_json()
+    # Update the State object with all key-value pairs of the dictionary
+    for key, value in kwargs.items():
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(state, key, value)
+    # Save the updated State object to the storage
+    state.save()
+    # Return the updated State object in JSON format with 200 status code
+    return jsonify(state.to_dict()), 200
