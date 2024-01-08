@@ -3,10 +3,11 @@
 Create a Route `/status` on the object app_views.
 """
 
-from flask import jsonify
+from flask import Flask, jsonify
 from api.v1.views import app_views
 from models import storage
 
+app = Flask(__name__)
 
 @app_views.route('/status', methods=['GET'])
 def api_status():
@@ -15,17 +16,14 @@ def api_status():
     """
     response = {'status': 'OK'}
     return jsonify(response)
-@app_views.route('/stats', methods=['GET'])
-def get_stats():
-    '''
-    Retrieves the number of each objects by type.
-    '''
-    stats = {
-        'amenities': storage.count('Amenity'),
-        'cities': storage.count('City'),
-        'places': storage.count('Place'),
-        'reviews': storage.count('Review'),
-        'states': storage.count('State'),
-        'users': storage.count('User')
-    }
-    return jsonify(stats)
+
+@app.route('/api/v1/stats', methods=['GET'])
+def stats():
+    classes = ['User', 'Place', 'City', 'Amenity', 'State', 'Review']  # Add or remove class names as needed
+    counts = {}
+    for cls in classes:
+        counts[cls] = storage.count(cls)
+    return jsonify(counts)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
