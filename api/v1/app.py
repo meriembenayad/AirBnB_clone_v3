@@ -7,8 +7,13 @@ from os import getenv
 from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+
+# enable CORS and allow for origins:
+CORS(app, resources={r'/api/v1/*': {'origins': '0.0.0.0'}})
 
 # Register the app_views blueprint:
 app.register_blueprint(app_views)
@@ -23,7 +28,7 @@ def teardown_engine(exception):
     """
     storage.close()
 
-
+# task 5
 # Error handlers for expected app behavior:
 @app.errorhandler(404)
 def not_found(error):
