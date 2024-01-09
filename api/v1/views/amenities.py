@@ -10,7 +10,8 @@ from flask import jsonify, abort, request
 
 
 @app_views.route('/amenities', strict_slashes=False, methods=['GET'])
-@app_views.route('/amenities/<amenity_id>', strict_slashes=False, methods=['GET'])
+@app_views.route('/amenities/<amenity_id>', strict_slashes=False,
+                 methods=['GET'])
 def get_amenities(amenity_id=None):
     """
         Retrieves the list of all Amenity objects:
@@ -33,7 +34,8 @@ def get_amenities(amenity_id=None):
         return jsonify(amenity.to_dict())
 
 
-@app_views.route('/amenities/<amenity_id>', strict_slashes=False, methods=['DELETE'])
+@app_views.route('/amenities/<amenity_id>', strict_slashes=False,
+                 methods=['DELETE'])
 def delete_amenity(amenity_id):
     """
         Deletes a Amenity object:
@@ -67,7 +69,8 @@ def create_amenity():
     return jsonify(new_amenity.to_dict()), 201
 
 
-@app_views.route('/amenities/<amenity_id>', strict_slashes=False, methods=['PUT'])
+@app_views.route('/amenities/<amenity_id>', strict_slashes=False,
+                 methods=['PUT'])
 def update_amenity(amenity_id):
     """
         Updates a Amenity object: PUT /api/v1/amenities/<amenity_id>
@@ -79,7 +82,7 @@ def update_amenity(amenity_id):
     if amenity is None:
         abort(404)
     amenities_data = request.get_json(force=True, silent=True)
-    if 'name' not in amenities_data:
+    if not amenities_data:
         abort(400, 'Not a JSON')
 
     amenity.name = amenities_data.get("name", amenity.name)
