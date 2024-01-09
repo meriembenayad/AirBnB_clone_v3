@@ -74,6 +74,7 @@ def link_amenity(place_id, amenity_id):
 
     if amenity not in place_amenities:
         place_amenities.append(amenity)
+        storage.save()
     else:
         return jsonify(amenity.to_dict()), 200
 
