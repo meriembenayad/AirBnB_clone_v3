@@ -24,7 +24,7 @@ def place_amenities(place_id):
         amenities = place.amenities
         for amenity in amenities:
             ameni = amenity.to_dict()
-            ameni["Place"] = place_id
+            ameni["Place"] = place.name
             amenities_list.append(ameni)
 
     else:
