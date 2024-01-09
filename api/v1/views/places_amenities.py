@@ -27,6 +27,7 @@ def place_amenities(place_id):
 
     else:
         amenities_list = place.amenity_ids
+
     return jsonify(amenities_list)
 
 
@@ -52,7 +53,7 @@ def delete_amenity_from_place(place_id, amenity_id):
             amenity.save()
         else:
             abort(404)
-    return jsonify({}, 200)
+    return jsonify({}), 200
 
 
 @app_views.route("places/<place_id>/amenities/<amenity_id>",
