@@ -10,28 +10,29 @@ from flask import jsonify, abort, request
 
 
 @app_views.route('/amenities', strict_slashes=False, methods=['GET'])
+def get_amenities():
+    """
+        Retrieves the list of all Amenity objects:4
+        GET /api/v1/amenities
+    """
+    amenities_list = storage.all(Amenity).values()
+    return jsonify([amenity.to_dict() for amenity in amenities_list])
+
+
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
                  methods=['GET'])
 def get_amenities(amenity_id=None):
     """
-        Retrieves the list of all Amenity objects:
-        GET /api/v1/amenities
+        Retrieves amenity
         GET /api/v1/amenities/<amenity_id>
 
         Args:
         amenity_id -- Amenity Id
     """
-    amenities_list = []
-    if amenity_id is None:
-        all_amenities = storage.all(Amenity).values()
-        for value in all_amenities:
-            amenities_list.append(value.to_dict())
-        return jsonify(amenities_list)
-    else:
-        amenity = storage.get(Amenity, amenity_id)
-        if amenity is None:
-            abort(404)
-        return jsonify(amenity.to_dict())
+    amenity = storage.get(Amenity, amenity_id)
+    if amenity is None:
+        abort(404)
+    return jsonify(amenity.to_dict())
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
@@ -78,13 +79,15 @@ def update_amenity(amenity_id):
         Args:
         amenity_id -- Amenity id to updated
     """
-    amenity = storage.get(Amenity, amenity_id)
-    if amenity is None:
-        abort(404)
     amenities_data = request.get_json(force=True, silent=True)
     if not amenities_data:
         abort(400, 'Not a JSON')
-
-    amenity.name = amenities_data.get("name", amenity.name)
+    amenity = storage.get(Amenity, amenity_id)
+    if amenity is None:
+        abort(404)
+    for key, value in amenities_data.items():
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(amenity, key, value)
     amenity.save()
+
     return jsonify(amenity.to_dict()), 200
