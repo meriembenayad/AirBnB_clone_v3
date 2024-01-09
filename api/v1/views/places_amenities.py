@@ -23,7 +23,9 @@ def place_amenities(place_id):
     if db_mode == "db":
         amenities = place.amenities
         for amenity in amenities:
-            amenities_list.append(amenity.to_dict())
+            ameni = amenity.to_dict()
+            ameni["Place"] = place_id
+            amenities_list.append(ameni)
 
     else:
         amenities_list = place.amenity_ids
