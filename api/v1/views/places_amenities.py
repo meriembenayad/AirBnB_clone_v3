@@ -50,10 +50,10 @@ def delete_amenity_from_place(place_id, amenity_id):
     for amenity in place_amenities:
         if amenity.id == amenity_id:
             amenity.delete()
-            amenity.save()
-        else:
-            abort(404)
-    return jsonify({}), 200
+            storage.save()
+            return jsonify({}), 200
+
+    abort(404)
 
 
 @app_views.route("places/<place_id>/amenities/<amenity_id>",
