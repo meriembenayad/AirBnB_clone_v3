@@ -3,10 +3,9 @@
 Create a view Amenity objects that handles all default RESTFul API
 """
 from api.v1.views import app_views
-from models import storage
-from api.v1.views import app_views
-from models.amenity import Amenity
 from flask import jsonify, abort, request
+from models import storage
+from models.amenity import Amenity
 
 
 @app_views.route('/amenities', strict_slashes=False, methods=['GET'])
@@ -15,8 +14,9 @@ def get_amenities():
         Retrieves the list of all Amenity objects:4
         GET /api/v1/amenities
     """
-    amenities_list = storage.all(Amenity).values()
-    return jsonify([amenity.to_dict() for amenity in amenities_list])
+    all_amenities = storage.all('Amenity').values()
+    amenities = [amenity.to_dict() for amenity in all_amenities]
+    return jsonify(amenities)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
@@ -29,7 +29,7 @@ def get_amenities(amenity_id=None):
         Args:
         amenity_id -- Amenity Id
     """
-    amenity = storage.get(Amenity, amenity_id)
+    amenity = storage.get('Amenity', amenity_id)
     if amenity is None:
         abort(404)
     return jsonify(amenity.to_dict())
@@ -79,12 +79,12 @@ def update_amenity(amenity_id):
         Args:
         amenity_id -- Amenity id to updated
     """
-    amenities_data = request.get_json(force=True, silent=True)
-    if not amenities_data:
-        abort(400, 'Not a JSON')
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
         abort(404)
+    amenities_data = request.get_json(force=True, silent=True)
+    if not amenities_data:
+        abort(400, 'Not a JSON')
     for key, value in amenities_data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(amenity, key, value)
