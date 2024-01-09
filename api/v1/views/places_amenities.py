@@ -11,6 +11,7 @@ from flask import abort, request, jsonify
 
 db_mode = os.getenv("HBNB_TYPE_STORAGE")
 
+
 @app_views.route("/places/<place_id>/amenities", strict_slashes=False,
                  methods=["GET"])
 def place_amenities(place_id):
@@ -32,7 +33,7 @@ def place_amenities(place_id):
 @app_views.route("/places/<place_id>/amenities/<amenity_id>",
                  strict_slashes=False,
                  methods=["DELETE"])
-def delete_amenity(place_id, amenity_id):
+def delete_amenity_from_place(place_id, amenity_id):
     """delete an amenity my id"""
     place = storage.get(Place, place_id)
     if not place:
