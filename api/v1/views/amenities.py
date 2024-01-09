@@ -79,7 +79,7 @@ def update_amenity(amenity_id):
     if amenity is None:
         abort(404)
     amenities_data = request.get_json(force=True, silent=True)
-    if amenity not in amenities_data:
+    if 'name' not in amenities_data:
         abort(400, 'Not a JSON')
 
     amenity.name = amenities_data.get("name", amenity.name)
