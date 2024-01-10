@@ -4,6 +4,7 @@ from uuid import uuid4
 from datetime import datetime
 import models
 import os
+from hashlib import md5
 
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
@@ -50,7 +51,7 @@ class BaseModel:
         models.storage.new(self)
         models.storage.save()
 
-    def to_dict(self):
+    def to_dict(self, for_storage=False):
         """
         Method to return a dictionary representation of the BaseModel instance
         """
@@ -60,6 +61,10 @@ class BaseModel:
             dictionary[key] = value
             if key == 'created_at' or key == 'updated_at':
                 dictionary[key] = value.isoformat()
+            elif key == 'password' and not for_storage:
+                continue
+            else:
+                dictionary[key] = value
         dictionary.pop('_sa_instance_state', None)
         return dictionary
 

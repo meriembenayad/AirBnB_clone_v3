@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from os import getenv
+from hashlib import md5
 
 storage_type = getenv("HBNB_TYPE_STORAGE")
 
@@ -11,6 +12,7 @@ storage_type = getenv("HBNB_TYPE_STORAGE")
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""
     __tablename__ = 'users'
+
     if storage_type == 'db':
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
@@ -23,3 +25,14 @@ class User(BaseModel, Base):
         password = ""
         first_name = ""
         last_name = ""
+
+    def __init__(self, *args, **kwargs):
+        """ initializes User """
+        super().__init__(*args, **kwargs)
+        if 'password' in kwargs:
+            # Hash the password if provided during object creation or update
+            self.password = md5(kwargs['password'].encode()).hexdigest()
+
+    def update_pass(self, new_password):
+        """ Update password and hash it """
+        self.password = md5(new_password.encode()).hexdigest()
