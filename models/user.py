@@ -32,7 +32,7 @@ class User(BaseModel, Base):
         return self._password
 
     @password.setter
-    def new_password(self, value):
+    def password(self, value):
         """ Set new password """
         if storage_type == 'db':
             self._password = md5(value.encode()).hexdigest()
