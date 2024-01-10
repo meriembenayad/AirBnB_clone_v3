@@ -22,14 +22,11 @@ def place_amenities(place_id):
         abort(400)
     if db_mode == "db":
         amenities = place.amenities
-        for amenity in amenities:
-            amenities_list.append(amenity.to_dict())
-
     else:
         amenities = place.amenity_ids
-        amenities_list = []
-        for id in amenities:
-            amenities_list.append(storage.get(Amenity, id).to_dict())
+
+    for amenity in amenities:
+        amenities_list.append(amenity.to_dict())
 
     return jsonify(amenities_list)
 
