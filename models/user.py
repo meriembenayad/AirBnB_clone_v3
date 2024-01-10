@@ -34,5 +34,4 @@ class User(BaseModel, Base):
     @password.setter
     def password(self, value):
         """ Set new password """
-        if storage_type == 'db':
-            self._password = md5(value.encode()).hexdigest()
+        self._password = md5(value.encode()).hexdigest()
