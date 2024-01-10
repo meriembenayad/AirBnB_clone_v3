@@ -35,3 +35,8 @@ class User(BaseModel, Base):
     def password(self, value):
         """ Set new password """
         self._password = md5(value.encode()).hexdigest()
+
+    def save(self):
+        """ Save the current state of the object to the database/file """
+        self.password = self._password
+        super().save()
