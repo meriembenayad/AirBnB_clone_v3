@@ -26,12 +26,12 @@ class User(BaseModel, Base):
         first_name = ""
         last_name = ""
 
-    def __init__(self, *args, **kwargs):
-        """ initializes User """
-        super().__init__(*args, **kwargs)
+    @property
+    def password(self):
+        """ Getter password """
+        return self._password
 
-    def __update_pass__(self, key, value):
-        """ hash password """
-        if key == 'password':
-            value = md5(value.encode()).hexdigest()
-        super().__update_pass__(key, value)
+    @password.setter
+    def new_password(self, value):
+        """ Set new password """
+        self._password = md5(value.encode()).hexdigest()
