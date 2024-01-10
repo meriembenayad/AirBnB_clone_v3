@@ -65,5 +65,5 @@ def update_user(user_id):
     obj.password = data.get("password", obj.password)
     obj.first_name = data.get("first_name", obj.first_name)
     obj.last_name = data.get("last_name", obj.last_name)
-    storage.save()
+    obj.save()
     return jsonify(obj.to_dict()), 200
