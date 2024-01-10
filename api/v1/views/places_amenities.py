@@ -19,7 +19,7 @@ def place_amenities(place_id):
     amenities_list = []
     place = storage.get(Place, place_id)
     if not place:
-        abort(400)
+        abort(404)
     if db_mode == "db":
         amenities = place.amenities
     else:
