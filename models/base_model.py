@@ -51,7 +51,7 @@ class BaseModel:
         models.storage.new(self)
         models.storage.save()
 
-    def to_dict(self, for_storage=False):
+    def to_dict(self):
         """
         Method to return a dictionary representation of the BaseModel instance
         """
@@ -61,11 +61,9 @@ class BaseModel:
             dictionary[key] = value
             if key == 'created_at' or key == 'updated_at':
                 dictionary[key] = value.isoformat()
-            elif key == 'password' and not for_storage:
-                continue
-            else:
-                dictionary[key] = value
         dictionary.pop('_sa_instance_state', None)
+        if models.storage == 'db' and hasattr(self, 'password'):
+            dictionary.pop('password', None)
         return dictionary
 
     def delete(self):

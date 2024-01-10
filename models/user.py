@@ -29,10 +29,9 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """ initializes User """
         super().__init__(*args, **kwargs)
-        if 'password' in kwargs:
-            # Hash the password if provided during object creation or update
-            self.password = md5(kwargs['password'].encode()).hexdigest()
 
-    def update_pass(self, new_password):
-        """ Update password and hash it """
-        self.password = md5(new_password.encode()).hexdigest()
+    def __update_pass__(self, key, value):
+        """ hash password """
+        if key == 'password':
+            value = md5(value.encode()).hexdigest()
+        super().__update_pass__(key, value)
