@@ -42,5 +42,4 @@ class User(BaseModel, Base):
 
     def save(self):
         """ Save the current state of the object to the database/file """
-        self.password = self._password
         super().save()
