@@ -61,9 +61,10 @@ class BaseModel:
             dictionary[key] = value
             if key == 'created_at' or key == 'updated_at':
                 dictionary[key] = value.isoformat()
+            if key == 'password':
+                del dictionary['password']
         dictionary.pop('_sa_instance_state', None)
-        if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-            dictionary.pop('password', None)
+
         return dictionary
 
     def delete(self):
