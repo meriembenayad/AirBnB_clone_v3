@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """This module defines a class User"""
-from typing import Any
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
@@ -31,8 +30,17 @@ class User(BaseModel, Base):
         """ Initialize User """
         super().__init__(*args, **kwargs)
 
-    def __setattr__(self, name, value):
-        """ Sets a password with md5 encryption """
-        if name == 'password':
-            value = md5(value.encode()).hexdigest()
-        super().__setattr__(name, value)
+    @property
+    def password(self):
+        """ Getter password """
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        """ Set new password """
+        self._password = md5(value.encode()).hexdigest()
+
+    def save(self):
+        """ Save the current state of the object to the database/file """
+        self.password = self._password
+        super().save()
