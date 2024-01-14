@@ -93,7 +93,10 @@ def update_placey(place_id):
 @app_views.route("/places_search", strict_slashes=False,
                  methods=["POST"])
 def search_places():
-    """ Retrieves all Place objects depending of the JSON in the body of the request. """
+    """
+        Retrieves all Place objects
+        depending of the JSON in the body of the request.
+    """
     data = request.get_json()
 
     if data is None:
@@ -104,14 +107,15 @@ def search_places():
         cities = data.get('cities', None)
         amenities = data.get('amenities', None)
 
-    if not data or not len(data) or ( not states and not cities and not amenities):
+    if not data or not len(data) or (
+            not states and not cities and not amenities):
         places = storage.all('Place').values()
         list_places = []
         for place in places:
             list_places.append(place.to_dict())
-        
+
         return jsonify(list_places)
-    
+
     list_places = []
     if states:
         states_obj = [storage.get('State', state_id) for state_id in states]
@@ -133,8 +137,10 @@ def search_places():
     if amenities:
         if not list_places:
             list_places = storage.all('Place').values()
-        amenities_obj = [storage.get('Amenity', amenity_id) for amenity_id in amenities]:
-        list_places = [place for place in list_places if all([am in place.amenities for am in amenities_obj])]
+        amenities_obj = [storage.get('Amenity', am_id) for am_id in amenities]
+        list_places = [place for place in list_places
+                       if all([am in place.amenities
+                               for am in amenities_obj])]
 
     places = []
     for pl in list_places:
